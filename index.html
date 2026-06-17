@@ -1,29 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="h-full bg-slate-950 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIPANTAU PROCURA</title>
   
-  <title>SIPANTAU PROCURA</title> 
+  <!-- Favicon menggunakan file archive.png yang diunggah -->
+  <link rel="icon" type="image/png" href="archive.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden; /* Biar ga ada scrollbar */
-      background-color: #0d1117; /* Warna background gelap biar pas loading ga silau */
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    iframe {
-      border: none;
-      width: 100vw;
-      height: 100vh;
-      display: block;
+    
+    /* Custom Neon Glow Effects */
+    .neon-text-glow {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.1);
+    }
+    
+    .neon-border-glow {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+
+    /* Custom Scrollbar for sleek dark UI */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
     }
   </style>
 </head>
-<body>
+<body class="h-full overflow-hidden flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-black">
 
-  <iframe src="https://script.google.com/macros/s/AKfycbyGh1fyF_1sozIYsGQvnMhkgok09LgvA1GCS2dBXFBocyr0I_Gs8G1u05G8WqgAoHNF-Q/exec"></iframe>
+  <!-- Header Premium Glassmorphism -->
+  <header class="flex-none bg-slate-900/60 backdrop-blur-md border-b border-white/5 px-4 py-3 md:px-6 flex items-center justify-between z-10">
+    <div class="flex items-center space-x-3">
+      <!-- Container Logo / Favicon dengan fallback SVG jika gambar belum ter-load -->
+      <div class="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-800/80 p-1.5 border border-white/10 flex items-center justify-center transition-transform hover:scale-105 duration-300">
+        <img 
+          src="archive.png" 
+          alt="Logo" 
+          class="w-full h-full object-contain"
+          onerror="this.style.display='none'; document.getElementById('fallback-icon').classList.remove('hidden');"
+        />
+        <!-- Fallback Icon jika archive.png tidak ditemukan dalam direktori lokal -->
+        <div id="fallback-icon" class="hidden text-emerald-400">
+          <i data-lucide="archive" class="w-6 h-6"></i>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-lg md:text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 bg-clip-text text-transparent neon-text-glow">
+          SIPANTAU PROCURA
+        </h1>
+        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Monitoring System</p>
+      </div>
+    </div>
 
+    <!-- Status Koneksi Aktif (Anti-Lag Indicator) -->
+    <div class="flex items-center space-x-4">
+      <div class="hidden sm:flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-xs font-semibold text-emerald-400">Server Terhubung</span>
+      </div>
+      
+      <!-- Tombol Refresh Terisolasi -->
+      <button 
+        onclick="refreshIframe()" 
+        class="p-2 rounded-lg bg-slate-800/80 border border-white/5 hover:border-emerald-500/30 hover:bg-slate-800 text-slate-300 hover:text-emerald-400 transition-all duration-200" 
+        title="Muat Ulang Halaman"
+      >
+        <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Container Utama Iframe -->
+  <main class="flex-grow relative w-full h-full bg-slate-950">
+    
+    <!-- Shimmer Loader Premium (Akan hilang setelah iframe berhasil dimuat secara penuh) -->
+    <div id="loading-screen" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/90 backdrop-blur-lg transition-all duration-500">
+      <div class="p-8 rounded-2xl bg-slate-900/50 border border-white/5 flex flex-col items-center max-w-sm w-full mx-4 shadow-2xl neon-border-glow">
+        <!-- Logo berdenyut -->
+        <div class="relative w-16 h-16 rounded-2xl bg-slate-800/80 p-2.5 border border-emerald-500/20 mb-6 animate-pulse flex items-center justify-center">
+          <img 
+            src="archive.png" 
+            alt="Logo" 
+            class="w-full h-full object-contain"
+            onerror="this.style.display='none'; document.getElementById('fallback-loader-icon').classList.remove('hidden');"
+          />
+          <div id="fallback-loader-icon" class="hidden text-emerald-400">
+            <i data-lucide="archive" class="w-8 h-8"></i>
+          </div>
+        </div>
+        
+        <h3 class="text-lg font-bold text-slate-100 mb-2">Memuat Sistem</h3>
+        <p class="text-sm text-slate-400 text-center mb-6">Menghubungkan ke secure server SIPANTAU PROCURA...</p>
+        
+        <!-- Progress Bar Loading Animasi -->
+        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full animate-[loading-bar_1.5s_infinite] w-2/3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Iframe Google Apps Script -->
+    <iframe 
+      id="app-iframe"
+      src="https://script.google.com/macros/s/AKfycbyGh1fyF_1sozIYsGQvnMhkgok09LgvA1GCS2dBXFBocyr0I_Gs8G1u05G8WqgAoHNF-Q/exec"
+      class="w-full h-full border-0 absolute inset-0"
+      allow="geolocation; microphone; camera; midi; encrypted-media;"
+      onload="hideLoading()"
+    ></iframe>
+  </main>
+
+  <!-- Tailwind Custom Animasi CSS -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'loading-bar': 'loading-bar 1.5s infinite ease-in-out',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Logika Interaktivitas Frontend (Anti-Lag & Responsive) -->
+  <script>
+    // Inisialisasi ikon Lucide
+    lucide.createIcons();
+
+    const loadingScreen = document.getElementById('loading-screen');
+    const iframe = document.getElementById('app-iframe');
+
+    // Menghilangkan screen loading setelah iframe siap
+    function hideLoading() {
+      // Tambahkan delay halus agar transisi fade-out terasa mulus dan profesional
+      setTimeout(() => {
+        loadingScreen.classList.add('opacity-0', 'pointer-events-none');
+      }, 800);
+    }
+
+    // Fungsi Refresh Terisolasi
+    function refreshIframe() {
+      // Kembalikan efek loading screen saat merefresh
+      loadingScreen.classList.remove('opacity-0', 'pointer-events-none');
+      iframe.src = iframe.src;
+    }
+
+    // Melindungi aplikasi dari pemutusan tak terduga (keep-alive dummy check)
+    window.addEventListener('offline', () => {
+      const statusText = document.querySelector('.text-emerald-400');
+      const statusDot = document.querySelector('.bg-emerald-500');
+      if(statusText && statusDot) {
+        statusText.textContent = "Koneksi Terputus";
+        statusText.className = "text-xs font-semibold text-rose-400";
+        statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-rose-500";
+      }
+    });
+
+    window.addEventListener('online', () => {
+      const statusText = document.querySelector('.text-rose-400');
+      const statusDot = document.querySelector('.bg-rose-500');
+      if(statusText && statusDot) {
+        statusText.textContent = "Server Terhubung";
+        statusText.className = "text-xs font-semibold text-emerald-400";
+        statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
+      }
+    });
+  </script>
 </body>
 </html>
